@@ -53,6 +53,24 @@
                 </div>
               @endif
             </div>
+            <div class="bmd-form-group{{ $errors->has('user_type') ? ' has-danger' : '' }} mt-3">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="material-icons">person</i>
+                  </span>
+                </div>
+                <select name="user_type" class="form-control " required>
+                  <option value="worker" selected>Worker</option>
+                  <option value="shop">Shop</option> 
+                </select>
+              </div>
+              @if ($errors->has('email'))
+                <div id="email-error" class="error text-danger pl-3" for="email" style="display: block;">
+                  <strong>{{ $errors->first('email') }}</strong>
+                </div>
+              @endif
+            </div>
             <div class="bmd-form-group{{ $errors->has('password') ? ' has-danger' : '' }} mt-3">
               <div class="input-group">
                 <div class="input-group-prepend">

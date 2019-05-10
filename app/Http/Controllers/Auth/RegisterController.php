@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Auth;
 
+use DB;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use PHPUnit\Framework\Constraint\Exception;
 
 class RegisterController extends Controller
 {
@@ -63,10 +65,39 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $data = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'user_type' => $data['user_type'],
         ]);
+       
+        $user_id = User::max('id');
+        if($data['user_type'] == 'worker')
+        {
+            $shop = array(
+                'name'=> $data['name'],
+                'user_id' => $user_id,
+            );
+            try{
+                DB::table('shop_table')
+                ->insert($shop);
+            }catch(Exception $e){
+    
+            }
+        }else{
+            $shop = array(
+                'shop_name'=> $data['name'],
+                'user_id' => $user_id,
+            );
+            try{
+                DB::table('shop_table')
+                ->insert($shop);
+            }catch(Exception $e){
+    
+            }
+        }
+
+        return $data;
     }
 }

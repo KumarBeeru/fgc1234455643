@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,15 +15,22 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
 
 Route::group(['middleware' => 'auth'], function () {
-	Route::get('table-list', function () {
-		return view('pages.table_list');
-	})->name('table');
 
+	Route::get('setting','settingController@setting')->name('setting');
+
+	Route::get('worklist','settingController@worklist')->name('worklist');
+
+	Route::post('getarea','ProfileController@getArea');
+	Route::post('setting/update','settingController@updateSetting');
+	Route::post('setting/areaList','settingController@updateAreaList');
+	Route::get('setting/addwork','settingController@AddworklistView');
+	
 	Route::get('typography', function () {
 		return view('pages.typography');
 	})->name('typography');

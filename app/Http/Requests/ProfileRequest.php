@@ -27,7 +27,12 @@ class ProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:3'],
-            'email' => ['required', 'email', Rule::unique((new User)->getTable())->ignore(auth()->id())],
+            'city' => ['required'],
+            'area' => ['required'],
+            'phone1' => ['required', 'min:10' , 'max:10'],
+            'phone2' => ['required', 'min:10' , 'max:10'],
+            'address' => ['required', 'min:5'],
+            'pincode' => ['required', 'min:6'],
         ];
     }
 }
