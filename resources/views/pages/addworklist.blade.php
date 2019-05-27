@@ -1,13 +1,12 @@
-@extends('layouts.app', ['activePage' => 'profile', 'titlePage' => __('User Profile')])
+@extends('layouts.app', ['activePage' => 'worklist', 'titlePage' => __('User Profile')])
 
 @section('content')
   <div class="content">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <form method="post" action="{{ route('profile.update') }}" autocomplete="off" class="form-horizontal">
-            @csrf
-            @method('put')
+          <form method="POST" action="{{ url('setting/addWorklist') }}" autocomplete="off" class="form-horizontal">
+             <input type="hidden" value="{{csrf_token()}}" name="_token"/>
             <div class="card ">
               <div class="card-header card-header-primary">
                 <h4 class="card-title">{{ __('Add Work List') }}</h4>
@@ -27,7 +26,7 @@
                   </div>
                 @endif
                 <div class="row">
-                  <label class="col-sm-2 col-form-label">{{ __('Work Type') }}</label>
+                  <label class="col-sm-3 col-form-label">{{ __('Work Type') }}</label>
                   <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('cat_name') ? ' has-danger' : '' }}">
                         <select class="form-control" name="cat_name" id="cat_name" required>
@@ -42,12 +41,12 @@
                   </div>
                 </div>
                 <div class="row">
-                  <label class="col-sm-2 col-form-label">{{ __('Work Sub Type') }}</label>
+                  <label class="col-sm-3 col-form-label">{{ __('Work Sub Type') }}</label>
                   <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('sub_name') ? ' has-danger' : '' }}">
-                      <select name="sub_name" id="sub_id" class="form-control" required>
+                      <select name="sub_name" id="sub_name" class="form-control" required>
                         @foreach($subcat as $msg)
-                            <option value="{{$msg->wor_subcat_id}}">{{$msg->subcat_name}}</option>
+                          <option value=" {{$msg->wor_subcat_id}} ">{{$msg->subcat_name}}</option>
                         @endforeach 
                       </select>
                       @if ($errors->has('sub_name'))
@@ -56,15 +55,18 @@
                     </div>
                   </div>
                 </div>
-                @if(sizeof($worklist,1))
                 <div class="row">
-                  <label class="col-sm-2 col-form-label">{{ __('Work name') }}</label>
+                  <label class="col-sm-3 col-form-label">{{ __('Work name') }}</label>
                   <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('name') ? ' has-danger' : '' }}">
                     <select name="name" class="form-control" id="input-name" required>
+                      @if(sizeof($worklist,1))  
                         @foreach($worklist as $msg)
                             <option value="{{$msg->wor_list_id}}">{{$msg->work_name}}</option>
                         @endforeach
+                      @else
+                        <option >No Work Found</option>
+                      @endif
                     </select>  
                       @if ($errors->has('name'))
                         <span id="name-error" class="error text-danger" for="input-name">{{ $errors->first('name')}}</span>
@@ -73,7 +75,7 @@
                   </div>
                 </div> 
                 <div class="row">
-                    <label class="col-sm-2 col-form-label">{{ __('Service Charge')}} :<i class="fas fa-rupee-sign"></i> </label>
+                    <label class="col-sm-3 col-form-label">{{ __('Service Charge')}} :<i class="fas fa-rupee-sign"></i> </label>
                     <div class="col-sm-7">
                         <div class="form-group{{ $errors->has('price') ? 'has-denger' : '' }}">
                             <input type="number" class="form-control" id="input-price" name="price" placeholder="{{ __('Enter Price')}}"  value="{{ old('price')}}" required/>
@@ -83,11 +85,9 @@
                         </div>
                     </div>
                 </div>
-                @else
-                    <p>No work is found</p>
-                @endif
               </div>
               <div class="card-footer ml-auto mr-auto">
+                <a href="{{ URL::previous() }}" class="btn btn-primary" >{{ __('Go Back') }}</a>
                 <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
               </div>
             </div>
@@ -96,4 +96,10 @@
       </div>
     </div>
   </div>
+  <script>
+    $(document).ready(function(){
+      $.url1="{{url('/')}}";
+      $.token = "{{csrf_token()}}";
+    })
+  </script>
 @endsection

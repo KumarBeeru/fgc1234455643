@@ -4,9 +4,9 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-12">
-      <form method="post" action="" autocomplete="off" class="form-horizontal">
+      <form method="post" action="setting/update" autocomplete="off" class="form-horizontal">
             @csrf
-            @method('put')
+            @method('post')
             <div class="card ">
               <div class="card-header card-header-primary">
                 <h4 class="card-title">{{ __('Settings') }}</h4>
@@ -21,6 +21,18 @@
                           <i class="material-icons">close</i>
                         </button>
                         <span>{{ session('status') }}</span>
+                      </div>
+                    </div>
+                  </div>
+                @endif
+                @if(!$setting[0]->city)
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="alert alert-warning">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <i class="material-icons">close</i>
+                        </button>
+                        <span>{{ __('Firstly Update Your profile') }}</span>
                       </div>
                     </div>
                   </div>
@@ -55,14 +67,14 @@
                   <label class="col-sm-2 col-form-label">{{ __('Home Delivery') }}</label>
                   <div class="col-sm-7">
                     <label class="switch">
-                        <input type="checkbox" class="form-control hidden_check"  {{  ($setting[0]->home_delivery ? "checked" : '') }} />
+                        <input type="checkbox" class="form-control hidden_check" name="home_delivery" {{  ($setting[0]->home_delivery ? "checked" : '') }} />
                         <span class="slider round"></span>
                     </label>
                   </div>
                 </div>
                 @endif
                 <div id="hiddenable">
-                @if($setting[0]->home_delivery || $user_type == 'worker')
+                @if( $user_type == 'worker')
                 <div class="card">
                   <div class="card-header card-header-success">
                     <h4 class="card-title">{{ __('Working area List') }}</h4>
@@ -92,6 +104,38 @@
                     @endforeach
                   </tbody>
                 </table>
+                @else
+                  @if($setting[0]->home_delivery)
+                    <div class="card">
+                      <div class="card-header card-header-success">
+                        <h4 class="card-title">{{ __('Working area List') }}</h4>
+                        <p class="card-category">{{ __('Custimize you settings') }}</p>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12 text-right">
+                        <a  class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addArea">{{ __('Add') }}</a>
+                      </div>
+                    </div>
+                    <table class="table">
+                      <thead class="text-primary">
+                        <th>Area</th>
+                        <th>Least Price</th>
+                        <th class="text-right">Action</th>
+                      </thead>
+                      <tbody>
+                        @foreach($area as $msg)
+                        <tr>
+                          <td>{{$msg->area_name}}</td>
+                          <td><i class="fas fa-rupee-sign"></i><span> {{$msg->mini_price}}</span></td>
+                          <td class="td-action text-right">
+                            <a class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#UpdateArea{{$msg->arealist_id}}"><i class="material-icons">edit</i></a>
+                          </td>
+                        </tr>
+                        @endforeach
+                      </tbody>
+                    </table>
+                  @endif
                 @endif
                 </div>
               </div>
@@ -117,7 +161,7 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <form method="post" action="{{url('/setting/update')}}" enctype="multipart/form-data">
+                <form method="post" action="{{url('/setting/AddareaList')}}" enctype="multipart/form-data">
                     <input type="hidden" value="{{csrf_token()}}" name="_token"/>
                     <input type="hidden" name="wlist_id" value=""/>
                     <div class="form-group">
@@ -140,6 +184,10 @@
         </div>
 	</div>
 </div>
+<!-- @php
+
+  var_dump($addableArea);
+@endphp -->
 
 @foreach($area as $msg)
 <div class="modal fade" id="UpdateArea{{$msg->arealist_id}}">
@@ -154,7 +202,7 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <form method="post" action="{{url('/setting/update')}}" enctype="multipart/form-data">
+                <form method="post" action="{{url('/setting/areaList')}}" enctype="multipart/form-data">
                     <input type="hidden" value="{{csrf_token()}}" name="_token"/>
                     <input type="hidden" name="wlist_id" value="{{$msg->wor_service_area_id}}"/>
                     <div class="form-group">

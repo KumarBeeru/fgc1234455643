@@ -3,6 +3,19 @@
 @section('content')
   <div class="content">
     <div class="container-fluid">
+
+      @if (!$check)
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="alert alert-warning">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <i class="material-icons">close</i>
+              </button>
+              <span>{{ __('Update your profile to Activate your Account') }}</span>
+            </div>
+          </div>
+        </div>
+      @endif
       <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6">
           <div class="card card-stats">
@@ -27,11 +40,11 @@
                 <i class="material-icons">store</i>
               </div>
               <p class="card-category">Revenue</p>
-              <h5 class="card-title">Rs. 34,245</h5>
+              <h5 class="card-title">Rs.</i>{{ $balance}}</h5>
             </div>
             <div class="card-footer">
               <div class="stats">
-                <a href="#AllTransaction">See All Transaction</a>
+                <a href="{{ route('map') }}">See All Transaction</a>
               </div>
             </div>
           </div>
@@ -175,12 +188,3 @@
   <div >
   </div>
 @endsection
-
-@push('js')
-  <script>
-    $(document).ready(function() {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-    });
-  </script>
-@endpush

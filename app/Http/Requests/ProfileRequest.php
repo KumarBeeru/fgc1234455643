@@ -27,12 +27,13 @@ class ProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'min:3'],
-            'city' => ['required'],
-            'area' => ['required'],
+            'city' => ['required','different:SAP'],
+            'area' => ['required','different:SAP'],
             'phone1' => ['required', 'min:10' , 'max:10'],
             'phone2' => ['required', 'min:10' , 'max:10'],
             'address' => ['required', 'min:5'],
             'pincode' => ['required', 'min:6'],
+            'aadhar' => ['required', 'min:12', 'max:12']
         ];
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use DB;
 use App\User;
 use Illuminate\Http\Request;
+use Validator,Redirect,Response,File;
 
 class ProfileController extends Controller
 {
@@ -26,7 +27,6 @@ class ProfileController extends Controller
         global $user_type;
 
         $user_type = User::where('id',Auth::id())->pluck('user_type');
-
         
         $profile = [];
         if($user_type[0] == "shop"){
@@ -36,10 +36,11 @@ class ProfileController extends Controller
         }
         else{
             $profile = DB::table('wor_info_tab')
-                ->select('name as shop_name','city','pic','phone1','phone2','address','area','pin_code as pincode')
+                ->select('name as shop_name','city','pic','aadhar_no','phone1','phone2','address','area','pin_code as pincode')
                 ->where('user_id',Auth::id()) 
                 ->get();
         }
+
         $city = DB::table('citylist_table')->get();
         $area = array();
         if(sizeof($city,1)){
@@ -74,8 +75,38 @@ class ProfileController extends Controller
      * @param  \App\Http\Requests\ProfileRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
+
+    private function upload_image(ProfileRequest $request){
+
+        // request()->validate([
+
+        //     'profile_pic' => 'required|profile_pic|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        
+        // ]);
+
+        echo "print";
+        $imageName = time().'.'.request()->profile_pic->getClientOriginalExtension();
+
+        request()->profile_pic->move(public_path('images'), $imageName);
+
+        return $imageName;
+    } 
+
     public function update(ProfileRequest $request)
     {
+
+        $imageName = "";
+        $imagePath = "";
+        //var_dump($_FILES);
+        $files = $request->file('image');
+        //var_dump($files);
+        if ($files != null ) {
+           //echo "profile pic found";
+           $destinationPath = 'public/worker/'; 
+           $imageName = date('YmdHis') . "." . $files->getClientOriginalExtension();
+           $files->move($destinationPath, $imageName);
+           $imagePath = $destinationPath . $imageName;
+        }    
 
         global $user_type;
         
@@ -91,8 +122,11 @@ class ProfileController extends Controller
                 'phone2'=>$request->get('phone2'),
                 'address'=>$request->get('address'),
                 'pincode'=>$request->get('pincode'),
-                'pic'=>''
+                'aadhar_no'=>$request->get('aadhar'),
             );
+            if($imageName != ""){
+                $shop_data['pic'] = $imagePath;
+            }
             DB::table('shop_table')
                 ->where('user_id',Auth::id())
                 ->update($shop_data);
@@ -107,8 +141,16 @@ class ProfileController extends Controller
                 'phone2'=>$request->get('phone2'),
                 'address'=>$request->get('address'),
                 'pin_code'=>$request->get('pincode'),
-                'pic'=>''
+                'aadhar_no'=>$request->get('aadhar'),
             );
+
+            if($imageName != ""){
+                $shop_data['pic'] = $imagePath;
+            }
+
+            // var_dump($shop_data);
+            // exit();
+
             DB::table('wor_info_tab')
                 ->where('user_id',Auth::id())
                 ->update($shop_data);

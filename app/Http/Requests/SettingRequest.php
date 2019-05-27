@@ -24,7 +24,10 @@ class SettingRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => ['required' , 'min:1'],
+            'sub_name' => ['required'],
+            'cat_name' => ['required'],
+            'price' => ['required']
         ];
     }
 }

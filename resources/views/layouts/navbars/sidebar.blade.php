@@ -60,6 +60,24 @@
             <p>{{ __('Worklist') }}</p>
         </a>
       </li>
+      <li class="nav-item{{ $activePage == 'account' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('map') }}">
+          <i class="material-icons">account_balance_wallet</i>
+            <p>{{ __('Account') }}</p>
+        </a>
+      </li>
+      <li class="nav-item{{ $activePage == 'notifications' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('notifications') }}">
+          <i class="material-icons">notifications</i>
+          <p>{{ __('Notifications') }}</p>
+        </a>
+      </li>
+      <li class="nav-item{{ $activePage == 'feedback' ? ' active' : '' }}">
+        <a class="nav-link" href="{{ route('feedback') }}">
+          <i class="material-icons">notifications</i>
+          <p>{{ __('Feedback') }}</p>
+        </a>
+      </li>
     </ul>
   </div>
 </div>

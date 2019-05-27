@@ -11,7 +11,7 @@
             </div>
             <div class="card-body ">
                 @if (session('status'))
-                  <div class="row">
+                  <div class="row"> 
                     <div class="col-sm-12">
                         <div class="alert alert-success">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -37,12 +37,15 @@
                     @foreach($work_list as $msg)
                     <tr>
                       <td>{{$msg->work_name}}</td>
-                      <td><i class="fas fa-rupee-sign"></i> {{$msg->price}} </td>
+                      <td id="input_price_{{$msg->wor_list_id}}"><i class="fas fa-rupee-sign"></i> {{$msg->price}} </td>
                       <td class="td-action text-right">
-                        <form > 
+                        <form method="get" action="{{ url('/setting/wldelete') }}" >
                             <input type="hidden" name="wor_list_id" value="{{$msg->wor_list_id}}" />    
-                            <button type="button" rel = "tooltip" title="Edit List" class="btn btn-primary btn-link btn-sm">
-                                <i class="material-icons">delete</i>
+                            <button type="button" rel = "tooltip" id="{{$msg->wor_list_id}}" class="btn btn-success btn-link btn-sm edit">
+                              <i class="material-icons btn_val{{$msg->wor_list_id}}">edit</i>
+                            </button>
+                            <button type="button" rel = "tooltip"  class="btn btn-primary btn-link btn-sm">
+                              <i class="material-icons">delete</i>
                             </button>
                         </form>
                       </td>
@@ -56,5 +59,12 @@
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready(function(){
+    $.url1="{{url('/')}}";
+    $.token = "{{csrf_token()}}";
+  })
+</script>
 
 @endsection

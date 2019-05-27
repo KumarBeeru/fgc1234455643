@@ -5,9 +5,9 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12">
-          <form method="post" action="{{ route('profile.update') }}" autocomplete="off" class="form-horizontal">
+          <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data" autocomplete="off" class="form-horizontal">
             @csrf
-            @method('put')
+            @method('post')
 
             <div class="card ">
               <div class="card-header card-header-primary">
@@ -54,6 +54,7 @@
                   <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('city') ? ' has-danger' : '' }}">
                     <select name="city" class="form-control select_city" required>
+                      <option value="SAP" >Select Option</option>
                       @if(sizeof($city,1))
                         @foreach($city as $msg)
                             @if($msg->city_name == $profile[0]->city)
@@ -77,6 +78,7 @@
                   <div class="col-sm-7">
                     <div class="form-group{{ $errors->has('area') ? ' has-danger' : '' }}">
                     <select name="area" class="form-control select_area" required>
+                      <option value="SAP">Select Option</option>
                       @if(sizeof($area))
                         @foreach($area as $msg)
                             @if($msg->area_name == $profile[0]->area)
@@ -142,9 +144,20 @@
                   </div>
                 </div>
                 <div class="row">
+                  <label class="col-sm-2 col-form-label">{{ __('Aadhar Card:') }}</label>
+                  <div class="col-sm-7">
+                    <div class="form-group{{ $errors->has('aadhar') ? ' has-danger' : '' }}">
+                      <input class="form-control{{ $errors->has('aadhar') ? ' is-invalid' : '' }}" name="aadhar" id="input-aadhar" type="number"  placeholder="{{ __('Ex : 0000 0000 0000') }}" value="{{ old('aadhar',$profile[0]->aadhar_no)}}" required/>
+                      @if ($errors->has('aadhar'))
+                        <span id="aadhar-error" class="error text-danger" for="input-aadhar">{{ $errors->first('aadhar') }}</span>
+                      @endif
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
                   <label class="col-sm-2 col-form-label">{{ __('Photo') }}</label>
                   <div class="col-sm-7">
-                    <input type="file" name="profile_pic " accept="image/*">
+                    <input type="file" name="image" accept="image/*"  required>
                   </div>
                 </div>
               </div>

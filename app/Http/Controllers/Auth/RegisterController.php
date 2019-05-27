@@ -80,10 +80,9 @@ class RegisterController extends Controller
                 'user_id' => $user_id,
             );
             try{
-                DB::table('shop_table')
+                DB::table('wor_info_tab')
                 ->insert($shop);
             }catch(Exception $e){
-    
             }
         }else{
             $shop = array(
@@ -97,6 +96,12 @@ class RegisterController extends Controller
     
             }
         }
+
+        DB::table('account_table')
+            ->insert([
+                'user_id' => $user_id,
+                'total_amt' => 0
+            ]);
 
         return $data;
     }
